@@ -1,6 +1,7 @@
 const restart = document.querySelector('.restart');
 const video = document.querySelector('video');
 const timers = [];
+const screenId = `scID_${generateScreenID()}`;
 
 function screenList() {
   return Object.entries(window.localStorage)
@@ -8,7 +9,7 @@ function screenList() {
     .map(([key, value]) => [key, JSON.parse(value)]);
 }
 
-function uniqueScreenID() {
+function generateScreenID() {
   const existingScreens = Object.keys(window.localStorage)
     .filter((key) => key.startsWith('scID_'))
     .map((key) => parseInt(key.replace('scID_', '')))
@@ -16,9 +17,7 @@ function uniqueScreenID() {
   return existingScreens.at(-1) + 1 || 1;
 }
 
-const screenId = `scID_${uniqueScreenID()}`;
-
-function screenPositions() {
+function screenPosition() {
   const windowDetails = {
     screenX: window.screenX,
     screenY: window.screenY,
@@ -37,11 +36,7 @@ function restartCam() {
   setTimeout(() => window.location.reload(), Math.random() * 1000);
 }
 
-function resetCam() {
-  localStorage.removeItem(screenId);
-}
-
-function removeCam() {
+function removeScreen() {
   const screens = screenList();
   for (const [key, screen] of screens) {
     if (Date.now() - screen.updated > 1000) {
@@ -50,15 +45,29 @@ function removeCam() {
   }
 }
 
+function camSplitter() {
+  video?.setAttribute('style', `transform: translate(-${window.screenX}px, -${window.screenY}px)`);
+  const screens = screenList();
+  screens.map(([key, screen], i) => {
+    const x = screen.screenX + screen.width / 2;
+    const y = screen.screenY + screen.height / 2;
+    return [key, { ...screen, x, y }];
+  });
+}
+
 function main() {
-  timers.push(setInterval(screenPositions, 10));
-  timers.push(setInterval(removeCam, 100));
+  initialize();
+  timers.push(setInterval(screenPosition, 10));
+  timers.push(setInterval(removeScreen, 100));
+  timers.push(setInterval(camSplitter, 10));
 }
 
 restart?.addEventListener('click', restartCam);
-window.addEventListener('beforeunload', resetCam);
+window.addEventListener('beforeunload', () => {
+  localStorage.removeItem(screenId);
+});
 
-function CameraInit() {
+function initialize() {
   navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
     if (!video) return;
     video.width = window.screen.availWidth;
@@ -69,4 +78,3 @@ function CameraInit() {
 }
 
 main();
-CameraInit();

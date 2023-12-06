@@ -1,11 +1,6 @@
-svg,
 video {
   position: absolute;
   pointer-events: none;
-}
-
-svg {
-  z-index: 2;
 }
 
 body {
