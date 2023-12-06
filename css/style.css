@@ -5,4 +5,29 @@ video {
 
 body {
   overflow: hidden;
+  background-color: #13171b;
+}
+
+.restart {
+  font-family: 'Open Sans', sans-serif;
+  background-color: #3498db;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.restart:hover {
+  background-color: #2980b9;
+}
+
+.credit {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 15px;
+  color: #ffffff;
+  position: absolute;
+  bottom: 5px;
 }

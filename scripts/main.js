@@ -68,7 +68,7 @@ window.addEventListener('beforeunload', () => {
 });
 
 function initialize() {
-  navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
+  navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => {
     if (!video) return;
     video.width = window.screen.availWidth;
     video.height = window.screen.availHeight;
